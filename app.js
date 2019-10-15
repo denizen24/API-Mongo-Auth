@@ -2,6 +2,7 @@ const express = require('express');
 const cookieParser = require('cookie-parser');
 const path = require('path');
 const mongoose = require('mongoose');
+const helmet = require('helmet');
 const homeRoutes = require('./routes/home');
 const usersRoutes = require('./routes/users');
 const cardsRoutes = require('./routes/cards');
@@ -25,6 +26,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 app.use(cookieParser());
+app.use(helmet());
 
 app.use('/', homeRoutes);
 

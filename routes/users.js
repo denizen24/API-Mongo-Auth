@@ -1,6 +1,7 @@
 const { Router } = require('express');
 const { updateProfile } = require('../controllers/updateProfile');
 const { updateAvatar } = require('../controllers/updateAvatar');
+const auth = require('../middlewares/auth');
 
 const User = require('../models/user');
 
@@ -24,8 +25,8 @@ router.get('/:id', (req, res) => {
     .catch(() => res.status(404).send(errRoute));
 });
 
-router.patch('/me', updateProfile);
-router.patch('/me/avatar', updateAvatar);
+router.patch('/me', auth, updateProfile);
+router.patch('/me/avatar', auth, updateAvatar);
 
 
 module.exports = router;

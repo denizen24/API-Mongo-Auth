@@ -9,14 +9,15 @@ module.exports.login = (req, res) => {
       const token = jwt.sign(
         { _id: user._id },
         'password-secret-key',
-        { expiresIn: '2h' },
+        { expiresIn: '7d' },
       );
       res
         .cookie('jwt', token, {
-          maxAge: 3600000,
+          maxAge: 3600000 * 24 * 7,
           httpOnly: true,
           sameSite: true,
         })
+        .send({ message: 'авторизация - OK' })
         .end();
     })
     .catch((err) => {
