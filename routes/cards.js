@@ -31,6 +31,7 @@ router.delete('/:id', (req, res) => {
       Card.findByIdAndRemove(req.params.id)
         .then((card) => res.send({ data: card }))
         .catch(() => res.status(404).send(errRoute));
+      return undefined;
     });
 });
 
