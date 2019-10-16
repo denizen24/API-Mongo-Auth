@@ -1,9 +1,14 @@
 const express = require('express');
+const cookieParser = require('cookie-parser');
 const path = require('path');
 const mongoose = require('mongoose');
+const helmet = require('helmet');
 const homeRoutes = require('./routes/home');
 const usersRoutes = require('./routes/users');
 const cardsRoutes = require('./routes/cards');
+const { createUser } = require('./controllers/users');
+const { login } = require('./controllers/login');
+const auth = require('./middlewares/auth');
 
 const undfRoute = { message: 'Запрашиваемый ресурс не найден' };
 
@@ -20,17 +25,16 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
+app.use(cookieParser());
+app.use(helmet());
+
 app.use('/', homeRoutes);
 
-app.use((req, res, next) => {
-  req.user = {
-    _id: '5d921594059a940a784706e2',
-  };
-  next();
-});
+app.post('/signin', login);
+app.post('/signup', createUser);
 
-app.use('/users', usersRoutes);
-app.use('/cards', cardsRoutes);
+app.use('/users', auth, usersRoutes);
+app.use('/cards', auth, cardsRoutes);
 
 app.get('*', (req, res) => {
   res.status(404).send(undfRoute);

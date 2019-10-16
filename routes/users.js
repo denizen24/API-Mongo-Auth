@@ -1,14 +1,12 @@
 const { Router } = require('express');
-const { createUser } = require('../controllers/users');
 const { updateProfile } = require('../controllers/updateProfile');
 const { updateAvatar } = require('../controllers/updateAvatar');
+const auth = require('../middlewares/auth');
 
 const User = require('../models/user');
 
 const router = Router();
 const errRoute = { message: 'Нет пользователя с таким id' };
-
-router.post('/', createUser);
 
 router.get('/', (req, res) => {
   User.find({})
@@ -27,8 +25,8 @@ router.get('/:id', (req, res) => {
     .catch(() => res.status(404).send(errRoute));
 });
 
-router.patch('/me', updateProfile);
-router.patch('/me/avatar', updateAvatar);
+router.patch('/me', auth, updateProfile);
+router.patch('/me/avatar', auth, updateAvatar);
 
 
 module.exports = router;
